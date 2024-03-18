@@ -7,3 +7,5 @@
 WebSocketServer/x64/*
 WebSocketClient/x64/*
 x64/*
+.vs/WebSocket++_ChatAppServer/v17/*
+.vs/WebSocket++_ChatAppServer/FileContentIndex/*
