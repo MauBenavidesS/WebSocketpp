@@ -1,15 +1,11 @@
-//// The ASIO_STANDALONE define is necessary to use the standalone version of Asio.
-//// Remove if you are using Boost Asio.
-//#define ASIO_STANDALONE
-
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
 #include <functional>
 
-int port = 4005;
-
 typedef websocketpp::server<websocketpp::config::asio> server;
+
+int port = 4005;
 
 class utility_server {
 public:
@@ -20,10 +16,13 @@ public:
 
         // Initialize Asio
         m_endpoint.init_asio();
+
+        // Set message handler
+        m_endpoint.set_message_handler(std::bind(&utility_server::on_message, this, std::placeholders::_1, std::placeholders::_2));
     }
 
     void run() {
-        // Listen to port
+        // Listen on port
         m_endpoint.listen(port);
 
         // Queues a connection accept operation
@@ -34,11 +33,17 @@ public:
     }
 private:
     server m_endpoint;
+
+    // Message handler for incoming messages
+    void on_message(websocketpp::connection_hdl hdl, server::message_ptr msg) {
+        printf("DEBUG. Received Message:... \n");
+        // Here you can add any processing logic for the received message
+        // For example, you can store it, forward it, or perform any other action
+    }
 };
 
-
-int WebSocketServer(void) {
-    printf("DEBUG. WebSocketServer Started, and Listening to Port %d. \n", port);
+int WebSocketServer() {
+    printf("DEBUG. WebSocketServer Starting in port: %d... \n", port);
     utility_server s;
     s.run();
     return 0;
